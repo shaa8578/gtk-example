@@ -1,5 +1,10 @@
 #include "global.h"
 
+#include <string>
+
+#include "gui.h"
+#include "worker.h"
+
 //------------------------------------------------------------------------------
 GtkWidget* gui::Global::mainWidget = nullptr;
 GtkWidget* gui::Global::menuItemExit = nullptr;
@@ -34,4 +39,24 @@ void gui::Global::choosingFile(GtkButton*, gpointer fileEntry) {
   }
 
   gtk_widget_destroy(dialog);
+}
+
+//------------------------------------------------------------------------------
+void gui::Global::findWord() {
+  auto file_entry(GTK_ENTRY(Global::chooseFilePath));
+  std::string file_path(gtk_entry_get_text(file_entry));
+  if (file_path.empty()) {
+    gtk_entry_set_placeholder_text(file_entry, "Необходимо выбрать файл");
+    return;
+  }
+
+  auto find_entry(GTK_ENTRY(Global::findText));
+  std::string find_text(gtk_entry_get_text(find_entry));
+  if (find_text.empty()) {
+    gtk_entry_set_placeholder_text(find_entry, "Нет текста для поиска");
+    return;
+  }
+
+  auto find_result(worker::searchWord(file_path, find_text));
+  priv_gui::showResultMessage(find_result, find_text);
 }

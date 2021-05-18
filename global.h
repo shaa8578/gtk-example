@@ -21,6 +21,7 @@ struct Global {
 
   static void closeMainWindow();
   static void choosingFile(GtkButton* /*button*/, gpointer fileEntry);
+  static void findWord();
 };
 
 } /* namespace gui */

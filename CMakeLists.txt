@@ -39,11 +39,13 @@ set(SOURCES_FILES
   main.cpp
   global.cpp
   gui.cpp
+  worker.cpp
 )
 
 set(HEADERS_FILES
   global.h
   gui.h
+  worker.h
 )
 
 #-------------------------------------------------------------------------------
