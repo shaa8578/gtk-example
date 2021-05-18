@@ -21,4 +21,6 @@ GtkWidget* setupCentralWidget();
 GtkWidget* setupFileChooserLayout();
 GtkWidget* setupFindTextLayout();
 
+void showResultMessage(bool isSuccessSearch, const std::string& findedWord);
+
 } /* namespace priv_gui */

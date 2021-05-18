@@ -30,6 +30,8 @@ void priv_gui::setupConnections() {
   g_signal_connect(GTK_BUTTON(gui::Global::chooseFileBtn), "clicked",
                    G_CALLBACK(gui::Global::choosingFile),
                    gui::Global::chooseFilePath);
+  g_signal_connect(GTK_BUTTON(gui::Global::findBtn), "clicked",
+                   G_CALLBACK(gui::Global::findWord), nullptr);
 }
 
 //------------------------------------------------------------------------------
@@ -113,4 +115,23 @@ GtkWidget* priv_gui::setupFindTextLayout() {
   gtk_box_pack_start(main_box, gui::Global::findBtn, FALSE, FALSE, 0);
 
   return find_text_layout;
+}
+
+//------------------------------------------------------------------------------
+void priv_gui::showResultMessage(bool isSuccessSearch,
+                                 const std::string& findedWord) {
+  std::string message;
+  GtkMessageType msg_type(GTK_MESSAGE_OTHER);
+  if (isSuccessSearch) {
+    message.assign("Слово \"%s\" найдено!");
+    msg_type = GTK_MESSAGE_INFO;
+  } else {
+    message.assign("\"%s\" в тексте нет.");
+    msg_type = GTK_MESSAGE_WARNING;
+  }
+  auto dialog(gtk_message_dialog_new(
+      GTK_WINDOW(gui::Global::mainWidget), GTK_DIALOG_MODAL, msg_type,
+      GTK_BUTTONS_CLOSE, message.c_str(), findedWord.c_str()));
+  gtk_dialog_run(GTK_DIALOG(dialog));
+  gtk_widget_destroy(dialog);
 }
