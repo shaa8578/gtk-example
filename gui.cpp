@@ -1,9 +1,24 @@
 #include "gui.h"
 
+#include <gtk/gtk.h>
+
 #include "global.h"
 
 //------------------------------------------------------------------------------
-void gui::setup(GtkApplication* app) {
+namespace priv_gui {
+
+void setupConnections();
+void setupMainWindow(GtkWindow* mainWindow);
+
+GtkWidget* setupMenuBar();
+GtkWidget* setupCentralWidget();
+GtkWidget* setupFileChooserLayout();
+GtkWidget* setupFindTextLayout();
+
+} /* namespace priv_gui */
+
+//------------------------------------------------------------------------------
+void gui::setup(_GtkApplication* app) {
   gui::Global::mainWidget = gtk_application_window_new(app);
   auto main_window(GTK_WINDOW(Global::mainWidget));
 
@@ -21,6 +36,25 @@ void gui::setup(GtkApplication* app) {
   priv_gui::setupConnections();
 
   gtk_widget_show_all(Global::mainWidget);
+}
+
+//------------------------------------------------------------------------------
+void gui::showResultMessage(bool isSuccessSearch,
+                            const std::string& findedWord) {
+  std::string message;
+  GtkMessageType msg_type(GTK_MESSAGE_OTHER);
+  if (isSuccessSearch) {
+    message.assign("Слово \"%s\" найдено!");
+    msg_type = GTK_MESSAGE_INFO;
+  } else {
+    message.assign("\"%s\" в тексте нет.");
+    msg_type = GTK_MESSAGE_WARNING;
+  }
+  auto dialog(gtk_message_dialog_new(
+      GTK_WINDOW(gui::Global::mainWidget), GTK_DIALOG_MODAL, msg_type,
+      GTK_BUTTONS_CLOSE, message.c_str(), findedWord.c_str()));
+  gtk_dialog_run(GTK_DIALOG(dialog));
+  gtk_widget_destroy(dialog);
 }
 
 //------------------------------------------------------------------------------
@@ -115,23 +149,4 @@ GtkWidget* priv_gui::setupFindTextLayout() {
   gtk_box_pack_start(main_box, gui::Global::findBtn, FALSE, FALSE, 0);
 
   return find_text_layout;
-}
-
-//------------------------------------------------------------------------------
-void priv_gui::showResultMessage(bool isSuccessSearch,
-                                 const std::string& findedWord) {
-  std::string message;
-  GtkMessageType msg_type(GTK_MESSAGE_OTHER);
-  if (isSuccessSearch) {
-    message.assign("Слово \"%s\" найдено!");
-    msg_type = GTK_MESSAGE_INFO;
-  } else {
-    message.assign("\"%s\" в тексте нет.");
-    msg_type = GTK_MESSAGE_WARNING;
-  }
-  auto dialog(gtk_message_dialog_new(
-      GTK_WINDOW(gui::Global::mainWidget), GTK_DIALOG_MODAL, msg_type,
-      GTK_BUTTONS_CLOSE, message.c_str(), findedWord.c_str()));
-  gtk_dialog_run(GTK_DIALOG(dialog));
-  gtk_widget_destroy(dialog);
 }
