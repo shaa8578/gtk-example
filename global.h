@@ -20,6 +20,7 @@ struct Global {
   static GtkWidget* findBtn;
 
   static void closeMainWindow();
+  static void choosingFile(GtkButton* /*button*/, gpointer fileEntry);
 };
 
 } /* namespace gui */
