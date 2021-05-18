@@ -58,5 +58,5 @@ void gui::Global::findWord() {
   }
 
   auto find_result(worker::searchWord(file_path, find_text));
-  priv_gui::showResultMessage(find_result, find_text);
+  gui::showResultMessage(find_result, find_text);
 }
