@@ -27,6 +27,9 @@ void gui::setup(GtkApplication* app) {
 void priv_gui::setupConnections() {
   g_signal_connect_swapped(gui::Global::menuItemExit, "activate",
                            G_CALLBACK(gui::Global::closeMainWindow), nullptr);
+  g_signal_connect(GTK_BUTTON(gui::Global::chooseFileBtn), "clicked",
+                   G_CALLBACK(gui::Global::choosingFile),
+                   gui::Global::chooseFilePath);
 }
 
 //------------------------------------------------------------------------------
